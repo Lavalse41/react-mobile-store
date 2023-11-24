@@ -1,16 +1,16 @@
-import { createContext, useEffect, useState } from "react";
+import { useContext, createContext, useEffect, useState } from "react";
 import axios from "axios";
 
 const BrandsContext = createContext();
 
-export function BrandsProvider({ children }) {
+function BrandsProvider({ children }) {
   const [brands, setBrands] = useState([]);
 
   useEffect(() => {
     async function getBrands() {
       try {
         const res = await axios.get("http://localhost:3001/brands");
-        console.log(res.data);
+        // console.log(res.data);
         setBrands(res.data);
       } catch (err) {
         console.log(err.message);
@@ -26,6 +26,12 @@ export function BrandsProvider({ children }) {
   );
 }
 
+function useBrands() {
+  const context = useContext(BrandsContext);
+  if (context === undefined)
+    throw new Error("BrandsContext was used outside of the BrandsProvider");
+  return context;
+}
 
-
-export default BrandsContext;
+// eslint-disable-next-line react-refresh/only-export-components
+export { BrandsProvider, useBrands };
